@@ -6,14 +6,26 @@ pipeline {
     
   }
   stages {
-    stage('clean') {
-      steps {
-        build 'mvn clean'
+    stage('maven') {
+      parallel {
+        stage('maven') {
+          steps {
+            readMavenPom(file: 'pom.xml')
+          }
+        }
+        stage('') {
+          steps {
+            withMaven(jdk: '1.8_151', mavenOpts: 'clean', maven: '3.5.2') {
+              withMaven(mavenOpts: 'package')
+            }
+            
+          }
+        }
       }
     }
-    stage('test') {
+    stage('Junit') {
       steps {
-        build 'mvn package'
+        junit '**/target/surefire-reports/*.xml'
       }
     }
     stage('end') {
