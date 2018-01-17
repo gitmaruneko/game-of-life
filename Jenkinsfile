@@ -10,10 +10,10 @@ pipeline {
       parallel {
         stage('maven') {
           steps {
-            readMavenPom(file: 'pom.xml')
+            withMaven(jdk: '1.8.0_151', maven: '3.5.2', mavenOpts: 'clean')
           }
         }
-        stage('') {
+        stage('package') {
           steps {
             withMaven(jdk: '1.8_151', mavenOpts: 'clean', maven: '3.5.2') {
               withMaven(mavenOpts: 'package')
